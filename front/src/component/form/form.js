@@ -11,11 +11,12 @@ export default function Form(props) {
 
     //默认携带cookie
     axios.defaults.withCredentials = true
-    
+
     function autoLogin() {
         axios.get(`${address}/login`).then((res) =>{
-            console.log(res.data)
-
+            if(res.data.ret_code === 0){
+                props.history.replace('/editor')
+            }
         })
         return true
     }

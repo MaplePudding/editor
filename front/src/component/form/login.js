@@ -17,7 +17,9 @@ export default function Login(props) {
 
         axios.get(`${address}/login?name=${name}&pwd=${pwd}`)
             .then((res) => {
-                console.log(res.data)
+                if(res.data.ret_code === 0){
+                    props.history.replace('/editor')
+                }
             })
     }
 

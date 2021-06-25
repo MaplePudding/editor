@@ -1,9 +1,12 @@
+import axios from "axios"
 import React, {useState} from "react"
+import { address } from "../../public"
 
 export default function Signup(props){
     let [name, setName] = useState('')
     let [pwd, setPwd] = useState('')
 
+    //检测输入合法性
     function checkInfo(str1, str2) {
         if(str1.length < 1 || str2.length < 1){
             return false
@@ -26,9 +29,15 @@ export default function Signup(props){
             alert("输入信息不合法")
             return;
         }
+
+        axios.get(`${address}/signup?name=${name}&pwd=${pwd}`).then((res) =>{
+            if(res.data.ret_code === 2){
+                alert("注册失败")
+            }else if(res.data.ret_code === 0){
+                alert("注册成功")
+            }
+        })
     }
-
-
 
     return(
         <div className='ed-form-c'>
