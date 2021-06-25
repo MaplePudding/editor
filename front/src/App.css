@@ -1,0 +1,42 @@
+*{
+    box-sizing: border-box;
+}
+
+a{
+    text-decoration: none;
+    display: block;
+}
+
+a:link, a:hover, a:visited{
+    color: #868CA0;
+}
+
+input{
+    outline: none;
+    background: none;
+    border: none;
+}
+
+
+
+.ed-app{
+    height: 100vh;
+    background-color: #131417;
+}
+
+.ed-h{
+    height: 13vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3em;
+    border-bottom: 5px solid #252830;
+    color: #868CA0
+}
+
+.ed-x{
+    height: 87vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
