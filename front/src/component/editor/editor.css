@@ -1,0 +1,56 @@
+.ed-editor{
+    height: 100%;
+    width: 100%;
+}
+.ed-editor-toolBox{
+    height: 13vh;
+    width: 250px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.ed-editor-toolBox-i{
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: space-around;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.ed-editor-toolBox img{
+    width: 50px;
+    height: 50px;
+}
+
+.ed-editor-content{
+    height: 87vh;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background: #252830;
+}
+
+.ed-editor-prex{
+    width: 49.8vw;
+    height: 100%;
+    background: #131417;
+    word-break: break-all;
+    color: #868CA0
+}
+
+.ed-editor-ex{
+    width: 49.8vw;
+    height: 100%;
+    background: #131417;
+    color: #868CA0;
+    outline: none;
+}

@@ -10,7 +10,9 @@ function App() {
 
 	return (
 		<div className="ed-app">
-			<div className="ed-h">&nbsp;E&nbsp;D&nbsp;I&nbsp;T&nbsp;O&nbsp;R&nbsp;</div>
+			<div className="ed-h">
+				<span className='ed-h-inner'>&nbsp;E&nbsp;D&nbsp;I&nbsp;T&nbsp;O&nbsp;R&nbsp;</span>
+			</div>
 			<BrowserRouter>
 				<div className='ed-x'>
 					<Switch>
