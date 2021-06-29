@@ -1,4 +1,9 @@
 import React,{useEffect, useState} from 'react'
+import axios from 'axios'
+import { address } from '../../public'
+import Qs from 'qs'
+import saveImg from "./save.png";
+import downloadImg from './download.png'
 
 let timer = null
 
@@ -40,7 +45,6 @@ export default function EditBox(props){
 
     //正则解析html
     function getTargetContentArr(){
-        console.log(1)
         let divArr = Array.from(htmlContent.getElementsByTagName('div'))
         let divContentArr = divArr.map((v, i, a) =>{
             return v.innerHTML
@@ -64,11 +68,38 @@ export default function EditBox(props){
          */
     }
 
-    function autoSave(){
+
+
+    function download(){
 
     }
-    
 
+    function save(){
+        function getMdStr(){
+            //转换成makrdown数组
+            let mdStr = document.getElementsByClassName('ed-editor-ex')[0].innerHTML
+            let tempArr = mdStr.replaceAll('<div>', '</div>').split("</div>")
+            //替换所有的空字符串
+            for(let i = 0; i < tempArr.length; ++i){
+                if(tempArr[i] === '' || tempArr[i] === '<br>'){
+                    tempArr[i] = '\n'
+                }
+            }
+
+            let finalStr = ''
+            //拼接markdown字符串
+            for(let i = 0; i < tempArr.length; ++i){
+                finalStr += tempArr[i]
+            }
+            return finalStr
+        }
+        let mdStr = getMdStr()
+        let data = {name: 'mdStr', data: mdStr}
+
+        axios.post(`${address}/save`, Qs.stringify(data)).then((res) =>{
+            console.log(res.data)
+        })
+    }
 
     
     // 防抖处理，防止调用栈爆炸
@@ -83,10 +114,22 @@ export default function EditBox(props){
         props.setTargetContentArr(targetContentArr)
     })
 
+    useEffect(() =>{
+        setInterval(() =>{
+            save()
+        }, 60000)
+    }, [])
+
 
     return(
+        <React.Fragment>
+        <div className='ed-editor-toolBox'>
+            <div className='ed-editor-toolBox-i' onClick={() =>{save()}}>Save<img src={saveImg} alt="Save"/></div>
+            <div className='ed-editor-toolBox-i' onClick={() =>{download()}}>Download<img src={downloadImg}  alt="Download"/></div>
+        </div>
         <div className='ed-editor-ex' contentEditable="true" onInput={() =>{onChange()}} >
             //Please write markdown at the back
         </div>
+        </React.Fragment>
     )
 }

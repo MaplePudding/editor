@@ -13,12 +13,11 @@ export default function Form(props) {
     axios.defaults.withCredentials = true
 
     function autoLogin() {
-        axios.get(`${address}/login`).then((res) =>{
+        axios.get(`${address}/autoLogin`).then((res) =>{
             if(res.data.ret_code === 0){
                 props.history.replace('/editor')
             }
         })
-        return true
     }
 
     function changeStyle() {
@@ -27,9 +26,7 @@ export default function Form(props) {
 
     // 自动登录
     useEffect(() => {
-        if (autoLogin()) {
-            console.log("Has been login")
-        }
+    autoLogin()
     }, [])
 
     return (

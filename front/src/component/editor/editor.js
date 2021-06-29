@@ -11,38 +11,25 @@ export default function Editor(props){
     let [targetContentArr, setTargetContentArr] = useState([])
     //检测是否登录过
     function autoLogin() {
-        axios.get(`${address}/login`).then((res) =>{
+        axios.get(`${address}/autoLogin`).then((res) =>{
             if(res.data.ret_code === 0){
-                props.history.replace('/editor')
+                return true
+            }else{
+                props.history.replace('/form')
             }
         })
-        return true
     }
 
     useEffect(() =>{
-        if(autoLogin()){
-            console.log("login success")
-        }else{
-            props.history.replace('/form')
-        }
+    autoLogin()
     }, [])
 
-    function download(){
 
-    }
-
-    function save(){
-
-    }
     return(
         <div className='ed-editor'>
-            <div className='ed-editor-toolBox'>
-                <div className='ed-editor-toolBox-i' onClick={save}>Save<img src={saveImg} alt="Save"/></div>
-                <div className='ed-editor-toolBox-i' onClick={download}>Download<img src={downloadImg}  alt="Download"/></div>
-            </div>
             <div className='ed-editor-content'>
-                    <EditBox setTargetContentArr={setTargetContentArr}/>
-                    <PreBox targetContentArr={targetContentArr}/>
+                    <EditBox setTargetContentArr={setTargetContentArr} />
+                    <PreBox targetContentArr={targetContentArr} />
             </div>
         </div>
     )

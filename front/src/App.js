@@ -17,7 +17,7 @@ function App() {
 				<div className='ed-x'>
 					<Switch>
 						<Route path='/form' component={Form} />
-						<Route path='/editor' exec component={Editor} />
+						<Route path='/editor' component={Editor} />
 						<Redirect exact path='/' to='/form' />
 					</Switch>
 				</div>

@@ -1,4 +1,4 @@
-import React, {useState}from 'react'
+import React, {useState, useEffect}from 'react'
 
 export default function PreBox(props){
     function initHtmlStr(htmlArr){
@@ -13,6 +13,7 @@ export default function PreBox(props){
         let prex = document.getElementsByClassName('ed-editor-prex')[0]
         prex.innerHTML = initHtmlStr(props.targetContentArr)
     }, 0)
+
     
 
     return(
