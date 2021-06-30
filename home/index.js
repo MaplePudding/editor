@@ -105,6 +105,14 @@ app.post('/save', function(req, res){
     res.json({ret_code: 0, ret_msg: 'success'})
 })
 
+app.get('/download', function(req, res){
+    res.set({
+        'Content-Type': 'application/octet-stream',
+        'Content-Disposition': 'attachment; filename=markdown.md',
+    });
+    fs.createReadStream(`./md/${req.session.name}.md`).pipe(res)
+})
+
 app.listen(8080, function () {
     console.log('Example app listening on port 8080');
 }

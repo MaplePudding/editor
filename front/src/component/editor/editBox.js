@@ -69,16 +69,12 @@ export default function EditBox(props){
     }
 
 
-
-    function download(){
-
-    }
-
     function save(){
         function getMdStr(){
             //转换成makrdown数组
             let mdStr = document.getElementsByClassName('ed-editor-ex')[0].innerHTML
             let tempArr = mdStr.replaceAll('<div>', '</div>').split("</div>")
+
             //替换所有的空字符串
             for(let i = 0; i < tempArr.length; ++i){
                 if(tempArr[i] === '' || tempArr[i] === '<br>'){
@@ -97,7 +93,7 @@ export default function EditBox(props){
         let data = {name: 'mdStr', data: mdStr}
 
         axios.post(`${address}/save`, Qs.stringify(data)).then((res) =>{
-            console.log(res.data)
+
         })
     }
 
@@ -114,6 +110,7 @@ export default function EditBox(props){
         props.setTargetContentArr(targetContentArr)
     })
 
+    // 自动保存
     useEffect(() =>{
         setInterval(() =>{
             save()
@@ -125,7 +122,7 @@ export default function EditBox(props){
         <React.Fragment>
         <div className='ed-editor-toolBox'>
             <div className='ed-editor-toolBox-i' onClick={() =>{save()}}>Save<img src={saveImg} alt="Save"/></div>
-            <div className='ed-editor-toolBox-i' onClick={() =>{download()}}>Download<img src={downloadImg}  alt="Download"/></div>
+            <div className='ed-editor-toolBox-i'  >Download<a href={`${address}/download`} download='markdown.md'><img src={downloadImg}  alt="Download" /></a></div>
         </div>
         <div className='ed-editor-ex' contentEditable="true" onInput={() =>{onChange()}} >
             //Please write markdown at the back
