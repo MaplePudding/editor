@@ -59,7 +59,6 @@ app.get('/login', function(req, res){
 
 app.get('/autoLogin', function(req, res){
     if(req.session.login){
-        console.log(req.session.login)
         res.json({ret_code: 0, ret_msg: 'success'})
     }else{
         res.json({ret_code: 2, ret_msg: 'error'})
@@ -110,7 +109,19 @@ app.get('/download', function(req, res){
         'Content-Type': 'application/octet-stream',
         'Content-Disposition': 'attachment; filename=markdown.md',
     });
-    fs.createReadStream(`./md/${req.session.name}.md`).pipe(res)
+    try{
+        fs.createReadStream(`./md/${req.session.name}.md`).pipe(res)
+    }catch (e){
+        console.log(e)
+    }
+})
+
+app.get('/read', function(req, res){
+    try{
+        fs.createReadStream(`./md/${req.session.name}.md`).pipe(res)
+    }catch (e){
+        console.log(e)
+    }
 })
 
 app.listen(8080, function () {

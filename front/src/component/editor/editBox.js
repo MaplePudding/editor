@@ -57,7 +57,6 @@ export default function EditBox(props){
 
         setTargetContentArr(transformedContentArr)
 
-        console.log(transformedContentArr)
         //let chunkArr = (htmlContent.innerHTML + '').match(/<div>(.+)<\/div>/g)
         
         /**
@@ -93,7 +92,7 @@ export default function EditBox(props){
         let data = {name: 'mdStr', data: mdStr}
 
         axios.post(`${address}/save`, Qs.stringify(data)).then((res) =>{
-
+            console.log("save")
         })
     }
 
@@ -115,6 +114,39 @@ export default function EditBox(props){
         setInterval(() =>{
             save()
         }, 60000)
+        console.log("save")
+    }, [])
+
+    //登录后获取文件内容
+
+    useEffect(() =>{
+        setTimeout(() =>{
+            axios.get(`${address}/read`).then((res) =>{
+                let tempArr = res.data.split('\n')
+
+                //替换\n 包装上div
+                for(let i = 0; i < tempArr.length; ++i){
+                    if(tempArr[i] === ''){
+                        tempArr[i] = '<br>'
+                    }else{
+                        tempArr[i] = `<div>${tempArr[i]}</div>`
+                    }
+                }
+
+
+
+                //拼接html字符串
+                let htmlStr = ''
+                for(let i = 0; i < tempArr.length; ++i){
+                    htmlStr += tempArr[i]
+                }
+
+
+                // 写入html字符串
+                document.getElementsByClassName('ed-editor-ex')[0].innerHTML = htmlStr
+
+            })
+        }, 500)
     }, [])
 
 
