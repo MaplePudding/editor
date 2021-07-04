@@ -10,45 +10,87 @@ let timer = null
 export default function EditBox(props){
     let [targetContentArr, setTargetContentArr] = useState([])
     let [getTargetContentArr2, setTargetContentArr2] = useState(null)
+
+
     
     let htmlContent = null
     setTimeout(() =>{htmlContent = document.getElementsByClassName('ed-editor-ex')[0]}, 0)
 
     function transformMDStrToHTML(MDStr){
-
         //处理标题
-        if(MDStr.substring(0, 2) === '# '){
-            return `<h1>${MDStr.substring(2)}</h1>`
-        }else if(MDStr.substring(0, 3) === '## '){
-            return `<h2>${MDStr.substring(3)}</h2>`
-        }else if(MDStr.substring(0, 4) === '### '){
-            return `<h3>${MDStr.substring(4)}</h3>`
-        }else if(MDStr.substring(0, 5) === '#### '){
-            return `<h4>${MDStr.substring(5)}</h4>`
-        }else if(MDStr.substring(0, 6) === '##### '){
-            return `<h5>${MDStr.substring(6)}</h5>`
-        }else{
-            if(MDStr === '<br>'){
-                return MDStr
-            }else if(/!\[.*\]\(.*\)/.test(MDStr)){
-                //正则处理图片
-                let roughAlt = /\[.*\]/.exec(MDStr)[0]
-                let alt = `'${roughAlt.substring(1, roughAlt.length - 1)}'`
-                let roughSrc = /\(.*\)/.exec(MDStr)[0]
-                let src = `'${roughSrc.substring(1, roughSrc.length - 1).replace('/\\/g', '/')}'`;
-                return `<img alt=${alt} src=${src}/>`
-            }else{
-                return MDStr
+        if(/#+ .*/.test(MDStr)){
+            if(MDStr.substring(0, 2) === '# '){
+                return `<h1>${MDStr.substring(2)}</h1>`
+            }else if(MDStr.substring(0, 3) === '## '){
+                return `<h2>${MDStr.substring(3)}</h2>`
+            }else if(MDStr.substring(0, 4) === '### '){
+                return `<h3>${MDStr.substring(4)}</h3>`
+            }else if(MDStr.substring(0, 5) === '#### '){
+                return `<h4>${MDStr.substring(5)}</h4>`
+            }else if(MDStr.substring(0, 6) === '##### '){
+                return `<h5>${MDStr.substring(6)}</h5>`
             }
+        }else if(MDStr === '<br>'){
+            //换行
+            return MDStr
+        }else if(/!\[.*\]\(.*\)/.test(MDStr)) {
+            //正则处理图片
+            let roughAlt = /\[.*\]/.exec(MDStr)[0]
+            let alt = `'${roughAlt.substring(1, roughAlt.length - 1)}'`
+            let roughSrc = /\(.*\)/.exec(MDStr)[0]
+            let src = `'${roughSrc.substring(1, roughSrc.length - 1).replace('/\\/g', '/')}'`;
+            return `<img alt=${alt} src=${src}/>`
+        }else if(/\[.*\]\(.*\)/.test(MDStr)){
+            //正则处理link
+            let roughTitle = /\[.*\]/.exec(MDStr)[0]
+            let title = `${roughTitle.substring(1, roughTitle.length - 1)}`
+            let roughHref = /\(.*\)/.exec(MDStr)[0]
+            let href = `${roughHref.substring(1, roughHref.length - 1).replace('/\\/g', '/')}`;
+            return `<a href="${href}" style="text-decoration:underline;">${title}</a>`
+        }else if(MDStr && MDStr.split("* ")[0] != MDStr){
+                // 列表
+                let res = ''
+                let arr = MDStr.split("* ")
+                for(let i = 0; i < arr.length; ++i){
+                    if(arr[i]){
+                        res += `<li>${arr[i]}</li>`
+                    }
+                }
+                return '<ul>' + res + '</ul>'
+        }else if(MDStr && MDStr.split("+ ")[0] != MDStr){
+                // 列表
+                let res = ''
+                let arr = MDStr.split("+ ")
+                for(let i = 0; i < arr.length; ++i){
+                    if(arr[i]){
+                        res += `<li>${arr[i]}</li>`
+                    }
+                }
+                return '<ul>' + res + '</ul>'
+        }else if(MDStr && MDStr.split("- ")[0] != MDStr) {
+                // 列表
+                let res = ''
+                let arr = MDStr.split("- ")
+                for (let i = 0; i < arr.length; ++i) {
+                    if (arr[i]) {
+                        res += `<li>${arr[i]}</li>`
+                    }
+                }
+                return '<ul>' + res + '</ul>'
+        }else{
+            return MDStr
         }
     }
 
     //正则解析html
     function getTargetContentArr(){
         let divArr = Array.from(htmlContent.getElementsByTagName('div'))
+
         let divContentArr = divArr.map((v, i, a) =>{
             return v.innerHTML
         })
+
+        console.log(divContentArr)
 
         // md字符串转html
         let transformedContentArr = divContentArr.map((v, i, a) =>{
@@ -72,7 +114,10 @@ export default function EditBox(props){
         function getMdStr(){
             //转换成makrdown数组
             let mdStr = document.getElementsByClassName('ed-editor-ex')[0].innerHTML
-            let tempArr = mdStr.replaceAll('<div>', '</div>').split("</div>")
+            console.log(mdStr)
+            let tempArr = mdStr.replaceAll('<div></div>', '').replaceAll('<div>', '').split("</div>")
+
+            tempArr = tempArr.filter((val, i, arr) =>{return val != ''})
 
             //替换所有的空字符串
             for(let i = 0; i < tempArr.length; ++i){
@@ -84,7 +129,7 @@ export default function EditBox(props){
             let finalStr = ''
             //拼接markdown字符串
             for(let i = 0; i < tempArr.length; ++i){
-                finalStr += tempArr[i]
+                finalStr = finalStr + tempArr[i] + '\n'
             }
             return finalStr
         }
@@ -123,11 +168,11 @@ export default function EditBox(props){
         setTimeout(() =>{
             axios.get(`${address}/read`).then((res) =>{
                 let tempArr = res.data.split('\n')
-
                 //替换\n 包装上div
+                console.log(tempArr)
                 for(let i = 0; i < tempArr.length; ++i){
-                    if(tempArr[i] === ''){
-                        tempArr[i] = '<br>'
+                    if(tempArr[i] === '\n'){
+                        tempArr[i] = '<div> </div>'
                     }else{
                         tempArr[i] = `<div>${tempArr[i]}</div>`
                     }
@@ -140,8 +185,6 @@ export default function EditBox(props){
                 for(let i = 0; i < tempArr.length; ++i){
                     htmlStr += tempArr[i]
                 }
-
-
                 // 写入html字符串
                 document.getElementsByClassName('ed-editor-ex')[0].innerHTML = htmlStr
 
@@ -157,7 +200,6 @@ export default function EditBox(props){
             <div className='ed-editor-toolBox-i'  >Download<a href={`${address}/download`} download='markdown.md'><img src={downloadImg}  alt="Download" /></a></div>
         </div>
         <div className='ed-editor-ex' contentEditable="true" onInput={() =>{onChange()}} >
-            //Please write markdown at the back
         </div>
         </React.Fragment>
     )
