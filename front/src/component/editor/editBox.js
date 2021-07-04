@@ -78,8 +78,55 @@ export default function EditBox(props){
                 }
                 return '<ul>' + res + '</ul>'
         }else{
+            let biFlag = false
+            let boldFlag = false
+            let italicFlag = false
+            let deleteFlag = false
+
+            //预览斜体加粗
+            while(MDStr.indexOf('***') != -1){
+                if(!biFlag){
+                    MDStr = MDStr.replace('***', '<b><i>')
+                }else{
+                    MDStr = MDStr.replace('***', '</i></b>')
+                }
+                biFlag = !biFlag
+            }
+
+            //预览加粗
+            while(MDStr.indexOf('**') != -1){
+                if(!boldFlag){
+                    MDStr = MDStr.replace('**', '<b>')
+                }else{
+                    MDStr = MDStr.replace('**', '</b>')
+                }
+                boldFlag = !boldFlag
+            }
+
+            console.log(MDStr)
+
+            //预览斜体
+            while(MDStr.indexOf('*') != -1){
+                if(!italicFlag){
+                    MDStr = MDStr.replace('*', '<i>')
+                }else{
+                    MDStr = MDStr.replace('*', '</i>')
+                }
+                italicFlag = !italicFlag
+            }
+
+            //预览删除线
+            while(MDStr.indexOf('~~') != -1){
+                if(!deleteFlag){
+                    MDStr = MDStr.replace('~~', '<del>')
+                }else{
+                    MDStr = MDStr.replace('~~', '</del>')
+                }
+                deleteFlag = !deleteFlag
+            }
             return MDStr
         }
+
     }
 
     //正则解析html
@@ -114,7 +161,6 @@ export default function EditBox(props){
         function getMdStr(){
             //转换成makrdown数组
             let mdStr = document.getElementsByClassName('ed-editor-ex')[0].innerHTML
-            console.log(mdStr)
             let tempArr = mdStr.replaceAll('<div></div>', '').replaceAll('<div>', '').split("</div>")
 
             tempArr = tempArr.filter((val, i, arr) =>{return val != ''})
