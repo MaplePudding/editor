@@ -44,7 +44,12 @@
     height: 100%;
     background: #131417;
     word-break: break-all;
-    color: #868CA0
+    color: #868CA0;
+    overflow-y: scroll;
+}
+
+.ed-editor-prex::-webkit-scrollbar{
+    display: none;
 }
 
 .ed-editor-ex{
@@ -53,4 +58,10 @@
     background: #131417;
     color: #868CA0;
     outline: none;
+    overflow-y: scroll;
 }
+
+.ed-editor-ex::-webkit-scrollbar{
+    display: none;
+}
+
