@@ -1,1 +1,3 @@
 # editor
+
+![git](./readme.gif)
